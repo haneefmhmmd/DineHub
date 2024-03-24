@@ -8,10 +8,12 @@ const createToken = (id, roleId) => {
     return jwt.sign({ id, roleId }, process.env.JWT_SECRET, { expiresIn: 3 * 24 * 60 * 60 });
 }
 
-// Validate token from HTTP header
+// Validate token
 const requireAuth = (roleIds) => (req, res, next) => {
-    // Retrieve token from header
+
+    // Retrieve token from header for API testing
     const token = req.headers.authorization;
+    // const token = req.cookies.token;
 
     if (token) {
         jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
@@ -22,8 +24,8 @@ const requireAuth = (roleIds) => (req, res, next) => {
                 if (!roleIds.includes(decodedToken.roleId)) {
                     return res.status(403).json({ error: 'Forbidden: Insufficient role level' });
                 } else {
-                    console.log(decodedToken)
-                    next()
+                    req.userId = decodedToken.id;
+                    next();
                 }
             }
         })

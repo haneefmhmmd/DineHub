@@ -53,10 +53,34 @@ exports.login = async (req, res) => {
     }
 };
 
-exports.customerBoard = (req, res) => {
-    res.json('Customer Dashboard')
+exports.customerBoard = async (req, res) => {
+    const user = await User.findById(req.userId)
+
+    const response = {
+        message: 'Customer Dashboard',
+        user: {
+            _id: user._id,
+            roleId: user.roleId,
+            name: user.name,
+            email: user.email
+        }
+    };
+
+    res.json(response);
 };
 
-exports.restaurantBoard = (req, res) => {
-    res.json('Restaurant Dashboard')
-}
+exports.restaurantBoard = async (req, res) => {
+    const user = await User.findById(req.userId)
+
+    const response = {
+        message: 'Restaurant Dashboard',
+        user: {
+            _id: user._id,
+            roleId: user.roleId,
+            name: user.name,
+            email: user.email
+        }
+    };
+
+    res.json(response);
+};
