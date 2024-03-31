@@ -1,0 +1,20 @@
+.full-width {
+  width: 100%;
+}
+
+.business-hour-setting {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  input {
+    text-align: right;
+  }
+  .day {
+    font-size: 16px !important;
+    margin-right: auto;
+    margin-top: 18px;
+  }
+  .hour-label {
+    color: var(--secondary);
+  }
+}

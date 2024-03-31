@@ -1,0 +1,20 @@
+<div class="container resaturants">
+    <div class="searchbar">
+        <input type="text" placeholder="Search for a resaturants..." #searchTextField />
+        <button mat-flat-button type="button" (click)="onClickSearchBtn()">Search</button>
+    </div>
+    <section class="mt-5">
+        <h2>Featured Restaurants<span class="dot">.</span></h2>
+        <article class="resaturants-container mt-5">
+            <a routerLink="/{{resaturant.url}}" *ngFor="let resaturant of restaurants">
+                <mat-card>
+                    <img mat-card-image [src]="resaturant.logoHref" [alt]="resaturant.name" height="200">
+                    <mat-card-content class="mt-2">
+                        <mat-card-title>{{resaturant.name}}</mat-card-title>
+                    </mat-card-content>
+                </mat-card>
+
+            </a>
+        </article>
+    </section>
+</div>
