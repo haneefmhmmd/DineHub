@@ -6,6 +6,8 @@ const cors = require('cors');
 const mongoose = require('mongoose')
 require('dotenv').config()
 const userRoutes = require('./routes/userRoutes')
+const restaurantRoutes = require('./routes/restaurantRoutes')
+const menuRoutes = require('./routes/menuRoutes')
 
 
 app.use(express.static('public'))
@@ -21,7 +23,7 @@ mongoose.connect(connectionString)
     .catch(err => console.log(err))
 
 // Use routes
-app.use(userRoutes)
+app.use(userRoutes, restaurantRoutes, menuRoutes)
 
 // Listening port
 const PORT = 4000;

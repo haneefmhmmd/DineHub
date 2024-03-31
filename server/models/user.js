@@ -7,11 +7,11 @@ const { isEmail } = require('validator')
 const userSchema = new mongoose.Schema({
     roleId: {
         type: Number,
-        required: [true, 'Please choose a role either Customer or Restaurant']
+        default: 1
     },
-    name:{
-        type:String,
-        required:[true, 'Please provide your full name'],
+    name: {
+        type: String,
+        required: [true, 'Please provide your full name'],
     },
     email: {
         type: String,

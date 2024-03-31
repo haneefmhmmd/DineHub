@@ -6,28 +6,11 @@ require('dotenv').config()
 
 exports.signup = async (req, res) => {
     try {
-        const { role, name, email, password } = req.body;
+        const { name, email, password } = req.body;
 
-        if (role === "Customer" || role === "Restaurant") {
-            let roleId;
+        const user = await User.create({ name, email, password });
+        res.status(201).json({ user: { _id: user._id, roleId: user.roleId, name: user.name, email: user.email } });
 
-            // Assign roleId based on different role
-            switch (role) {
-                case "Customer":
-                    roleId = 1;
-                    break;
-                case "Restaurant":
-                    roleId = 2;
-                    break;
-                default:
-                    roleId = 0;
-            }
-
-            const user = await User.create({ roleId, name, email, password });
-            res.status(201).json({ user: { _id: user._id, roleId: user.roleId, name: user.name, email: user.email } });
-        } else {
-            res.status(400).json({ error: 'Please provide a correct user role' });
-        }
     } catch (error) {
         res.status(409).json({ error: error.message });
     }
@@ -54,33 +37,35 @@ exports.login = async (req, res) => {
 };
 
 exports.customerBoard = async (req, res) => {
-    const user = await User.findById(req.userId)
-
-    const response = {
-        message: 'Customer Dashboard',
-        user: {
-            _id: user._id,
-            roleId: user.roleId,
-            name: user.name,
-            email: user.email
-        }
-    };
-
-    res.json(response);
+    const user = await User.findById(req.loginId)
+    res.json(user);
 };
 
-exports.restaurantBoard = async (req, res) => {
-    const user = await User.findById(req.userId)
+exports.update = (req, res) => {
+    let userId;
+    if (req.loginId) {
+        userId = req.loginId;
+    }
+    else {
+        userId = req.params.id;
+    }
 
-    const response = {
-        message: 'Restaurant Dashboard',
-        user: {
-            _id: user._id,
-            roleId: user.roleId,
-            name: user.name,
-            email: user.email
-        }
-    };
-
-    res.json(response);
+    User.findByIdAndUpdate(userId, req.body, { new: true, useFindAndModify: false })
+        .then(updatedUser => {
+            if (!updatedUser) {
+                return res.status(404).json({
+                    message: `Cannot update user with id=${userId}. User not found.`
+                });
+            }
+            res.status(200).json({
+                message: "User was updated successfully.",
+                user: updatedUser
+            });
+        })
+        .catch(err => {
+            console.error("Error updating user:", err);
+            res.status(500).json({
+                message: `Error updating user with id=${userId}.`
+            });
+        });
 };
