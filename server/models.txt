@@ -40,16 +40,20 @@ The required entities:
     }
 
 3. Menu
-    * menuId           (String)
-    * Restaurant       --ref (Obj Ref)
-    * menuName         (String)
-    * category         (String)
-    * menuItems[] {    (JSON Array)
-        *itemName      (String)
-        *itemImage     (String Img)
-        *about         (String)
-        *price         (Number)
-    }
+    * menuId        (String)
+    * Restaurant    --ref (Obj Ref)
+    * menuName      (String)
+    * menuItems[] [ (JSON Array)
+        * category {
+            *items [
+               *itemName   (String)
+               *itemImage  (String Img)
+               *about      (String)
+               *price      (Number)
+            ]
+        }
+        
+    ]
 
 4. Reservation
     * reservationId    (String)
