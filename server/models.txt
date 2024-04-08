@@ -44,12 +44,16 @@ The required entities:
     * Restaurant    --ref (Obj Ref)
     * menuName      (String)
     * menuItems[] [ (JSON Array)
-        * category {
-            *items [
-               *itemName   (String)
-               *itemImage  (String Img)
-               *about      (String)
-               *price      (Number)
+       {
+            * category           (String)
+            *items []
+               {
+                  * category           (String)
+                  *name             (String)
+                  *image            (String Img)
+                  *description      (String)
+                  *price            (Number)
+               }
             ]
         }
         
