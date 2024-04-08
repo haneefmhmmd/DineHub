@@ -9,17 +9,31 @@ The required entities:
     * email     (String)
     * role      (Number)
 
+## I am thinking of having the restaurant itself as a type of user, in order to reduce complexity. Restaurant email is unique with a password.
 2. Restaurant
     * restaurantId              (String)
     * Name                      (String)
     * businessEmail             (String Email)
-    * address                   (String)
-    * postalCode                (String)
+    * url                       (String Email)
+    * address {                 (String Object)
+         * city                 (String)
+         * country              (String)
+         * province             (String)
+         * street               (String)
+         * postalCode           (String)
+    }                   
     * contactInfo               (Number)
     * about                     (String)
     * rating                    (Number)
     * menu                      (String)
     * logo                      (String Img)
+    * bannerImg                 (String Img)
+    * businessHours[] {         (JSON Array)
+        * day: [                (ArrayOArray)  // let's go with 24 hours format to avoid complexity in UI
+            *starTime,          (String)
+            *endTime            (String)
+         ]         
+    }
     * seatingArrangements[] {   (JSON Array)
         *tableNumber            (Number)
         *tableCapacity          (Number)
