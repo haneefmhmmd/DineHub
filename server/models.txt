@@ -1,19 +1,19 @@
 The required entities:
 
-1. User
-    * userId    (String)
-    * username  (String)
-    * password  (String)
-    * firstName (String)
-    * lastName  (String)
-    * email     (String)
-    * role      (Number)
+1. Customer
+    * userId       (String)
+    * username     (String)
+    * password     (String)
+    * firstName    (String)
+    * lastName     (String)
+    * email        (String)
+    * role         (Number)
 
-## I am thinking of having the restaurant itself as a type of user, in order to reduce complexity. Restaurant email is unique with a password.
 2. Restaurant
     * restaurantId              (String)
     * Name                      (String)
     * businessEmail             (String Email)
+    * password                  (String)
     * url                       (String Email)
     * address {                 (String Object)
          * city                 (String)
@@ -40,23 +40,23 @@ The required entities:
     }
 
 3. Menu
-    * menuId        (String)
-    * Restaurant    --ref (Obj Ref)
-    * menuName      (String)
-    * category      (String)
-    * menuItems[] { (JSON Array)
-        *itemName   (String)
-        *itemImage  (String Img)
-        *about      (String)
-        *price      (Number)
+    * menuId           (String)
+    * Restaurant       --ref (Obj Ref)
+    * menuName         (String)
+    * category         (String)
+    * menuItems[] {    (JSON Array)
+        *itemName      (String)
+        *itemImage     (String Img)
+        *about         (String)
+        *price         (Number)
     }
 
 4. Reservation
-    * reservationId (String)
-    * Restaurant    --ref (Obj Ref)
-    * User          --ref (Obj Ref)
-    * date          (date)
-    * slotInterval  (datetime)
-    * paymentInfo   (String)
-    * tableNumber   (Number)
-    * status        (String)
+    * reservationId    (String)
+    * Restaurant       --ref (Obj Ref)
+    * User             --ref (Obj Ref)
+    * date             (date)
+    * slotInterval     (datetime)
+    * paymentInfo      (String)
+    * tableNumber      (Number)
+    * status           (String)
