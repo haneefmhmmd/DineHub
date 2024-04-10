@@ -8,23 +8,23 @@ import { User } from '../models/user.model';
 import { AuthService } from './auth.service';
 @Injectable()
 export class RestaurantsService {
-  private URL: string = `${environment.API_ENDPOINT}/restaurants`;
+  private URL: string = `${environment.API_ENDPOINT}/restaurant`;
   restaurant = new Subject<Restaurant | null>();
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   public fetchRestaurants(name: string = '') {
-    let url = `${this.URL}.json`;
+    let url = `${this.URL}`;
     if (name) {
       url += `?orderBy="$key"&startAt="${name}"&endAt="${name}\uf8ff"`;
     }
     return this.http
-      .get(url)
-      .pipe(map((responseData): Restaurant[] => Object.values(responseData)));
+      .get<{ restaurants: Restaurant[] }>(url)
+      .pipe(map((responseData): Restaurant[] => responseData.restaurants));
   }
 
   public fetchRestaurant(name: string) {
-    return this.http.get<Restaurant>(`${this.URL}/${name}.json`);
+    return this.http.get<Restaurant>(`${this.URL}/${name}`);
   }
 
   createRestaurant(name: string) {

@@ -1,3 +1,3 @@
 export const environment = {
-  API_ENDPOINT: 'https://dinehub-24505-default-rtdb.firebaseio.com/',
+  API_ENDPOINT: 'https://localhost:3000',
 };
