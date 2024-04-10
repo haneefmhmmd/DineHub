@@ -3,11 +3,11 @@ export class Address {
     public street: string,
     public city: string,
     public province: string,
-    public zipCode: string,
+    public postalCode: string,
     public country: string
   ) {}
 
   public getFormattedAddress() {
-    return `${this.street}, ${this.city}, ${this.province}, ${this.zipCode},${this.country}`;
+    return `${this.street}, ${this.city}, ${this.province}, ${this.postalCode},${this.country}`;
   }
 }

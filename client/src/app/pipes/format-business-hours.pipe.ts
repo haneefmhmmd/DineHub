@@ -12,6 +12,7 @@ export class FormatBusinessHoursPipe implements PipeTransform {
     if (value.isHoliday) {
       return 'Holiday';
     }
-    return `${value.startTime} ${value.startTimePeriod} - ${value.endTime} ${value.endTimePeriod}`;
+    return `${value.openHours.startTime} - ${value.openHours.endTime}`;
+    // return `${value.openHours.startTime} ${value.openHours.startTimePeriod} - ${value.openHours.endTime} ${value.openHours.endTimePeriod}`;
   }
 }

@@ -14,6 +14,7 @@ export class Restaurant {
     public cuisine: string[],
     public rating: number,
     public about: string,
-    public menu: Menu
+    public menu: Menu,
+    public _id?: string
   ) {}
 }
