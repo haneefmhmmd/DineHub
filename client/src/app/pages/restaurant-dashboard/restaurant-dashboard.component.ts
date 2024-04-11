@@ -100,6 +100,7 @@ export class RestaurantDashboardComponent implements OnInit, OnDestroy {
     this.dashboardService
       .updateGeneralInfoData(this.generalInformationForm.value)
       .subscribe((data) => {
+        console.log(data);
         this.createOrUpdateGeneralInfoForm(data);
       });
   }

@@ -171,60 +171,63 @@ export class DashboardService {
     const mappedBusinessHours = [
       {
         openHours: {
-          startTime: data.businessHour.mondayStartingTime,
-          endTime: data.businessHour.mondayEndingTime,
+          startTime: data.businessHours.mondayStartingTime,
+          endTime: data.businessHours.mondayEndingTime,
         },
         day: 'Monday',
       },
       {
         openHours: {
-          startTime: data.businessHour.thursdayStartingTime,
-          endTime: data.businessHour.tuesdayEndingTime,
+          startTime: data.businessHours.thursdayStartingTime,
+          endTime: data.businessHours.tuesdayEndingTime,
         },
         day: 'Tuesday',
       },
       {
         openHours: {
-          startTime: data.businessHour.wednesdayStartingTime,
-          endTime: data.businessHour.wednesdayEndingTime,
+          startTime: data.businessHours.wednesdayStartingTime,
+          endTime: data.businessHours.wednesdayEndingTime,
         },
         day: 'Wednesday',
       },
       {
         openHours: {
-          startTime: data.businessHour.thursdayStartingTime,
-          endTime: data.businessHour.thursdayEndingTime,
+          startTime: data.businessHours.thursdayStartingTime,
+          endTime: data.businessHours.thursdayEndingTime,
         },
         day: 'Thursday',
       },
       {
         openHours: {
-          startTime: data.businessHour.fridayStartingTime,
-          endTime: data.businessHour.fridayEndingTime,
+          startTime: data.businessHours.fridayStartingTime,
+          endTime: data.businessHours.fridayEndingTime,
         },
         day: 'Friday',
       },
       {
         openHours: {
-          startTime: data.businessHour.saturdayStartingTime,
-          endTime: data.businessHour.saturdayEndingTime,
+          startTime: data.businessHours.saturdayStartingTime,
+          endTime: data.businessHours.saturdayEndingTime,
         },
         day: 'Saturday',
       },
       {
         openHours: {
-          startTime: data.businessHour.sundayStartingTime,
-          endTime: data.businessHour.sundayEndingTime,
+          startTime: data.businessHours.sundayStartingTime,
+          endTime: data.businessHours.sundayEndingTime,
         },
         day: 'Sunday',
       },
     ];
-    console.log('sending req');
-    data.businessHour = mappedBusinessHours;
-    return this.http.get<{ restaurant: Restaurant }>(
-      `${this.URL}/restaurant/${this.currentUser?.userId}`,
-      { ...data }
-    );
+    data.businessHours = mappedBusinessHours;
+
+    console.log('sending req: ', data);
+    return this.http
+      .put<{ restaurant: Restaurant }>(
+        `${this.URL}/restaurant/${this.currentUser?.userId}`,
+        data
+      )
+      .pipe(map((data) => data.restaurant));
   }
   updateReservationInfoData(data: any) {
     this.reservationInfo = data;

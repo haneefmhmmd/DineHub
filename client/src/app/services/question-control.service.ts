@@ -12,7 +12,7 @@ export class QuestionControlService {
         const innerFormGroup: any = {};
         const parentQuestionKey = question.key;
         question.questions.forEach((question) => {
-          if (parentQuestionKey == 'businessHour') {
+          if (parentQuestionKey == 'businessHours') {
             innerFormGroup[question.key + 'StartingTime'] = new FormControl(
               question.startingTime,
               question.validators

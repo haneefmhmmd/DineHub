@@ -3,6 +3,7 @@ import { Question } from '../models/question.model';
 
 export class RestaurantInfoService {
   getGeneralInformationQuestions(answer: any): Question[] {
+    console.log('answer: ', answer);
     return [
       {
         key: 'name',
@@ -175,7 +176,7 @@ export class RestaurantInfoService {
         ],
       },
       {
-        key: 'businessHour',
+        key: 'businessHours',
         label: 'Operating Hours',
         hint: 'Enter timings in 24-hour format (e.g., 09:00). Use "00:00" for holidays.',
         questions: [

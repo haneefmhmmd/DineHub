@@ -17,12 +17,18 @@ export class AuthService {
   user = new BehaviorSubject<User | null>(null);
   private _expirationTimer: any;
   constructor(private http: HttpClient, private router: Router) {}
-  signUp(email: string, password: string, restaurantName: string) {
+  signUp(
+    email: string,
+    password: string,
+    restaurantName: string,
+    contactNumber: string
+  ) {
     return this.http
       .post(`${this.URL}/restaurant`, {
         name: restaurantName,
         businessEmail: email,
         password,
+        contactNumber,
       })
       .pipe(
         catchError(this.handleError)

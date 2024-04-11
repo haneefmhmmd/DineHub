@@ -78,12 +78,13 @@ export class AuthComponent implements OnInit, OnDestroy {
     if (formControl.errors) {
       const errorKeys = Object.keys(formControl.errors);
       let errorMessage = 'Invalid Data';
+
       errorKeys.forEach((error) => {
         if (error === 'required') {
           errorMessage = control.errorMessage.required;
         } else if (error === 'email') {
           errorMessage = control.errorMessage.email;
-        } else if (error === 'minLength') {
+        } else if (error === 'minlength') {
           errorMessage = control.errorMessage.minLength;
         }
       });
@@ -108,13 +109,15 @@ export class AuthComponent implements OnInit, OnDestroy {
   }
 
   handleSignUp() {
-    const { email, password, restaurantName } = this.form.value;
-    this.authService.signUp(email, password, restaurantName).subscribe(
-      (data) => {
-        this.router.navigate(['login']);
-      },
-      (error) => this.handleAuthError(error)
-    );
+    const { email, password, restaurantName, contactNumber } = this.form.value;
+    this.authService
+      .signUp(email, password, restaurantName, contactNumber)
+      .subscribe(
+        (data) => {
+          this.router.navigate(['login']);
+        },
+        (error) => this.handleAuthError(error)
+      );
   }
 
   setUpRestaurant(restaurantName: string, email: string) {
