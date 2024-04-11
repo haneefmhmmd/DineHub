@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
+import { forkJoin } from 'rxjs';
+import { Menu } from 'src/app/models/menu.model';
 import { FormatBusinessHoursPipe } from 'src/app/pipes/format-business-hours.pipe';
 import { RestaurantsService } from 'src/app/services/restaurants.service';
 import { Restaurant } from '../../models/restaurant.model';
@@ -14,6 +16,7 @@ import { Restaurant } from '../../models/restaurant.model';
 export class RestaurantComponent implements OnInit {
   isBusinessTimingDropdownOpen: boolean = false;
   restaurant!: Restaurant;
+  restaurantMenu!: any;
   today!: {
     day: string;
     time: number;
@@ -30,15 +33,18 @@ export class RestaurantComponent implements OnInit {
     this.route.params.subscribe((params) => {
       restaurantName = params['id'];
     });
+    const restaurant = this.restaurantService.fetchRestaurant(restaurantName);
+    const menu = this.restaurantService.fetchMenu(restaurantName);
 
-    this.restaurantService
-      .fetchRestaurant(restaurantName)
-      .subscribe((restaurant) => {
-        this.isLoading = false;
-        this.restaurant = restaurant;
-        console.log(restaurant);
-        this.title.setTitle(`DineHub | ${restaurant.name}`);
-      });
+    forkJoin([restaurant, menu]).subscribe(([restaurant, menu]) => {
+      this.isLoading = false;
+      this.restaurant = restaurant;
+      this.restaurantMenu = menu;
+
+      console.log(this.restaurantMenu.menuItems);
+      this.title.setTitle(`DineHub | ${restaurant.name}`);
+    });
+
     this.getTodayDetails();
   }
 
@@ -60,12 +66,19 @@ export class RestaurantComponent implements OnInit {
   }
 
   get isOpen() {
+    // console.log('businessHour: ', this.restaurant.businessHours);
     for (let businessHour of this.restaurant.businessHours) {
+      const startTime: number = +businessHour.openHours.startTime.replace(
+        ':',
+        ''
+      );
+      const endTime: number = +businessHour.openHours.endTime.replace(':', '');
+
       if (
         !businessHour.isHoliday &&
         businessHour.day.toLowerCase() === this.today.day &&
-        this.today.time >= businessHour.startTime &&
-        this.today.time <= businessHour.endTime
+        this.today.time >= startTime &&
+        this.today.time <= endTime
       ) {
         return { value: 'Open', style: 'text-green' };
       }

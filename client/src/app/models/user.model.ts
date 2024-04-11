@@ -1,9 +1,11 @@
+import { Restaurant } from './restaurant.model';
+
 export class User {
   constructor(
-    public email: string,
-    public userId: string,
+    public restaurant: Restaurant,
     public _token: string,
-    public _tokenExpirationDate: Date
+    public _tokenExpirationDate: Date,
+    public userId?: string
   ) {}
 
   get token() {

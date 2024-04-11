@@ -131,7 +131,7 @@ exports.findItemsByCategory = async (req, res) => {
 
 exports.findMenuByRestaurant = async (req, res) => {
   try {
-    const restaurantId = req.body.restaurantId;
+    const { restaurantId } = req.params;
 
     if (!restaurantId) {
       return res.status(400).json({ error: "Restaurant ID is required" });

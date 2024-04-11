@@ -49,7 +49,7 @@ const restaurantSchema = new mongoose.Schema({
   },
   businessEmail: {
     type: String,
-    required: [true, "Please provide a business email"],
+    // required: [true, "Please provide a business email"],
     unique: true,
     lowercase: true,
     validator: [isEmail, "Please enter a valid email"],
@@ -59,10 +59,10 @@ const restaurantSchema = new mongoose.Schema({
     required: [true, "Please enter password"],
     minlength: [6, "Min length of password is 6"],
   },
-  address: addressSchema,
+  address: { type: addressSchema },
   contactNumber: {
     type: String,
-    required: [true, "Please provide restaurant contact number"],
+    // required: [true, "Please provide restaurant contact number"],
     minLength: [10, "Minimum length of phone number is 10 digits"],
     maxLength: [10, "Maximum length of phone number is 10 digits"],
   },
@@ -80,7 +80,7 @@ const restaurantSchema = new mongoose.Schema({
   },
   cuisine: {
     type: String,
-    required: [true, "Please provide the cuisine type"],
+    // required: [true, "Please provide the cuisine type"],
   },
   rating: {
     type: Number,
@@ -88,7 +88,7 @@ const restaurantSchema = new mongoose.Schema({
   },
   about: {
     type: String,
-    required: [true, "Please description about your business"],
+    // required: [true, "Please description about your business"],
   },
   businessHours: [businessHoursSchema],
   seatingArrangements: [seatingArrangementSchema],

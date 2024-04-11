@@ -2,61 +2,53 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, catchError, tap, throwError } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { Restaurant } from '../models/restaurant.model';
 import { User } from '../models/user.model';
 
 interface AuthResponseData {
   token: string;
-  userId: string;
-  email: string;
-  expiresIn: string;
+  restaurant: Restaurant;
 }
 
 @Injectable()
 export class AuthService {
+  private URL: string = `${environment.API_ENDPOINT}`;
   user = new BehaviorSubject<User | null>(null);
   private _expirationTimer: any;
   constructor(private http: HttpClient, private router: Router) {}
   signUp(email: string, password: string, restaurantName: string) {
     return this.http
-      .post<AuthResponseData>(
-        'http://localhost:8080/restaurant_app/v1/api/auth/register',
-        {
-          restaurantName,
-          password,
-          email,
-        }
-      )
+      .post(`${this.URL}/restaurant`, {
+        name: restaurantName,
+        businessEmail: email,
+        password,
+      })
       .pipe(
-        catchError(this.handleError),
-        tap((responseData) => {
-          this.handleAuthentication(
-            responseData.email,
-            responseData.userId,
-            responseData.token,
-            +responseData.expiresIn
-          );
-        })
+        catchError(this.handleError)
+        // tap((responseData) => {
+        //   this.handleAuthentication(
+        //     responseData.email,
+        //     responseData.userId,
+        //     responseData.token,
+        //     +responseData.expiresIn
+        //   );
+        // })
       );
   }
 
   login(email: string, password: string) {
     return this.http
-      .post<AuthResponseData>(
-        'http://localhost:8080/restaurant_app/v1/api/auth/login',
-        {
-          email: email,
-          password: password,
-          returnSecureToken: true,
-        }
-      )
+      .post<AuthResponseData>(`${this.URL}/restaurant/login`, {
+        businessEmail: email,
+        password: password,
+      })
       .pipe(
         catchError(this.handleError),
         tap((responseData) => {
           this.handleAuthentication(
-            responseData.email,
-            responseData.userId,
-            responseData.token,
-            +responseData.expiresIn
+            responseData.restaurant,
+            responseData.token
           );
         })
       );
@@ -72,10 +64,10 @@ export class AuthService {
     }
     const parsedUserData = JSON.parse(userData);
     const authenticatedUser = new User(
-      parsedUserData.email,
-      parsedUserData.userId,
+      parsedUserData.restaurant,
       parsedUserData._token,
-      parsedUserData._tokenExpirationDate
+      parsedUserData._tokenExpirationDate,
+      parsedUserData.userId
     );
     if (authenticatedUser.token === null) {
       return;
@@ -98,39 +90,24 @@ export class AuthService {
     }, expiresIn);
   }
 
-  private handleAuthentication(
-    email: string,
-    userId: string,
-    token: string,
-    expiresIn: number
-  ) {
-    const expirationDate = new Date(expiresIn);
-    const user = new User(email, userId, token, expirationDate);
+  private handleAuthentication(restaurant: Restaurant, token: string) {
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + 2);
+
+    const user = new User(restaurant, token, expirationDate, restaurant._id);
     this.user.next(user);
     localStorage.setItem('user_data', JSON.stringify(user));
-    this.autoLogout(expiresIn);
+    // this.autoLogout(expirationDate.getTime());
   }
 
   private handleError(errResponse: HttpErrorResponse) {
     console.log(errResponse);
-    let errorMessage: string = 'An error has occurred!';
-    if (errResponse.error.code) {
-      switch (errResponse.error.code) {
-        case 'USER_ALREADY_EXISTING':
-          errorMessage = 'Email address already existing!';
-          break;
-        case 'DUPLICATE_RESTAURANT':
-          errorMessage =
-            'Restaurant name already taken. Please try a different name!';
-          break;
-        case 'INVALID_LOGIN_CREDENTIALS':
-          errorMessage = 'Invalid email/ password';
-          break;
-        case 'INVALID_TOKEN':
-          errorMessage = 'Please login again!';
-          break;
-      }
-    }
+    let errorMessage: string = errResponse.error.message
+      ? errResponse.error.message
+      : errResponse.error.error
+      ? errResponse.error.error
+      : 'An error has occurred!';
+
     return throwError(() => new Error(errorMessage));
   }
 }

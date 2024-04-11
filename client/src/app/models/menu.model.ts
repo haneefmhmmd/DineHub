@@ -9,6 +9,6 @@ export class MenuItem {
 }
 export class Menu {
   constructor(
-    public categorizedMenuItem: { category: string; items: MenuItem[] }[]
+    public restaurantMenu: { category: string; items: MenuItem[] }[]
   ) {}
 }

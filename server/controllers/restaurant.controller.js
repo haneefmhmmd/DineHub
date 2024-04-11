@@ -5,15 +5,7 @@ const { createToken } = require("../middlewares/utils");
 const bcrypt = require("bcrypt");
 
 exports.create = async (req, res) => {
-  if (
-    !req.body.name ||
-    !req.body.businessEmail ||
-    !req.body.password ||
-    !req.body.address ||
-    !req.body.contactNumber ||
-    !req.body.cuisine ||
-    !req.body.about
-  ) {
+  if (!req.body.name || !req.body.businessEmail || !req.body.password) {
     return res
       .status(400)
       .json({ error: "Please make sure all the fields are completed!" });

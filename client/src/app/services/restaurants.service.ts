@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { EMPTY, Subject, exhaustMap, map, take, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Address } from '../models/address.model';
+import { Menu } from '../models/menu.model';
 import { Restaurant } from '../models/restaurant.model';
 import { User } from '../models/user.model';
 import { AuthService } from './auth.service';
@@ -24,7 +25,9 @@ export class RestaurantsService {
   }
 
   public fetchRestaurant(name: string) {
-    return this.http.get<Restaurant>(`${this.URL}/${name}`);
+    return this.http
+      .get<{ restaurant: Restaurant }>(`${this.URL}/${name}`)
+      .pipe(map((responseData): Restaurant => responseData.restaurant));
   }
 
   createRestaurant(name: string) {
@@ -38,7 +41,7 @@ export class RestaurantsService {
       id: '',
       logoHref: '',
       menu: {
-        categorizedMenuItem: [],
+        restaurantMenu: [],
       },
       rating: 0,
       url: `restaurants/${name}`,
@@ -58,5 +61,17 @@ export class RestaurantsService {
         return EMPTY;
       })
     );
+  }
+
+  public fetchMenu(restaurantId: string) {
+    return this.http
+      .get<{ restaurantMenu: any }>(
+        `${environment.API_ENDPOINT}/menu/restaurant/${restaurantId}`
+      )
+      .pipe(
+        map((responseData: Menu) => {
+          return responseData.restaurantMenu[0];
+        })
+      );
   }
 }

@@ -12,7 +12,7 @@
             <div>
                 <h2>{{restaurant.name}}</h2>
                 <p class="text-grey"><span [class]="isOpen.style">{{isOpen.value}}</span> •
-                    {{restaurant.cuisine.join(", ")}} •
+                    {{restaurant.cuisine}} •
                     {{restaurant.rating}}
                     rating • {{restaurant.address.street}}, {{restaurant.address.city}}
                 </p>
@@ -48,15 +48,15 @@
     <article class="container restaurant-menu mt-2">
         <h5>Menu</h5>
         <mat-accordion>
-            <mat-expansion-panel [ngClass]="{'mt-2': i!==0}" [expanded]="i == 0" *ngFor="let menu of restaurant.menu.categorizedMenuItem;
+            <mat-expansion-panel [ngClass]="{'mt-2': i!==0}" [expanded]="i == 0" *ngFor="let menu of restaurantMenu.menuItems;
                 let i= index;">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        {{menu.category}}
+                        {{menu.categoryName}}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
                 <article class="menu-item">
-                    <mat-card appearance="outlined" *ngFor="let menuItem of menu.items">
+                    <mat-card appearance="outlined" *ngFor="let menuItem of menu.categoryItems">
                         <mat-card-header>
                             <img mat-card-avatar [src]="menuItem.image" alt="Photo of a Shiba Inu">
                             <mat-card-title>{{menuItem.name}}</mat-card-title>

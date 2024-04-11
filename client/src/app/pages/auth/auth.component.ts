@@ -111,7 +111,7 @@ export class AuthComponent implements OnInit, OnDestroy {
     const { email, password, restaurantName } = this.form.value;
     this.authService.signUp(email, password, restaurantName).subscribe(
       (data) => {
-        this.router.navigate(['app']);
+        this.router.navigate(['login']);
       },
       (error) => this.handleAuthError(error)
     );
@@ -122,7 +122,7 @@ export class AuthComponent implements OnInit, OnDestroy {
     this.restaurantService.createRestaurant(restaurantName).subscribe(
       () => {
         this.snackBar.dismiss();
-        this.router.navigate(['app']);
+        this.router.navigate(['login']);
       },
       (error) => this.handleAuthError('Error while creating restaurant!')
     );
