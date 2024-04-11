@@ -22,7 +22,7 @@ export class DynamicFormFieldComponent {
       formControl = <FormControl>this.form.get(questionControlName);
     }
     if (formControl && formControl.errors) {
-      console.log(formControl.errors);
+      // console.log(formControl.errors);
       const errorKeys = Object.keys(formControl.errors);
       let errorMessage: string | undefined = '';
       errorKeys.forEach((error) => {

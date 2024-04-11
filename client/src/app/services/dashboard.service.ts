@@ -1,5 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject, take } from 'rxjs';
+import { Subject, map, take } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { Restaurant } from '../models/restaurant.model';
 import { User } from '../models/user.model';
 import { AuthService } from './auth.service';
 
@@ -65,9 +68,9 @@ export class DashboardService {
   public generalInfoSubject: Subject<{}> = new Subject();
   public reservationInfoSubject: Subject<{}> = new Subject();
   public menuSubject: Subject<MenuType[]> = new Subject();
-
+  private URL: string = `${environment.API_ENDPOINT}`;
   private currentUser?: User | null;
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private http: HttpClient) {
     this.authService.user.subscribe((user) => {
       this.currentUser = user;
     });
@@ -147,8 +150,11 @@ export class DashboardService {
   };
 
   getGeneralInfoData() {
-    console.log(this.currentUser);
-    return { ...this.generalInfo };
+    return this.http
+      .get<{ restaurant: Restaurant }>(
+        `${this.URL}/restaurant/${this.currentUser?.userId}`
+      )
+      .pipe(map((data) => data.restaurant));
   }
   getMenuDataByCategory() {
     return [...this.menu];
@@ -162,8 +168,63 @@ export class DashboardService {
   }
 
   updateGeneralInfoData(data: any) {
-    this.generalInfo = data;
-    this.generalInfoSubject.next(this.getGeneralInfoData());
+    const mappedBusinessHours = [
+      {
+        openHours: {
+          startTime: data.businessHour.mondayStartingTime,
+          endTime: data.businessHour.mondayEndingTime,
+        },
+        day: 'Monday',
+      },
+      {
+        openHours: {
+          startTime: data.businessHour.thursdayStartingTime,
+          endTime: data.businessHour.tuesdayEndingTime,
+        },
+        day: 'Tuesday',
+      },
+      {
+        openHours: {
+          startTime: data.businessHour.wednesdayStartingTime,
+          endTime: data.businessHour.wednesdayEndingTime,
+        },
+        day: 'Wednesday',
+      },
+      {
+        openHours: {
+          startTime: data.businessHour.thursdayStartingTime,
+          endTime: data.businessHour.thursdayEndingTime,
+        },
+        day: 'Thursday',
+      },
+      {
+        openHours: {
+          startTime: data.businessHour.fridayStartingTime,
+          endTime: data.businessHour.fridayEndingTime,
+        },
+        day: 'Friday',
+      },
+      {
+        openHours: {
+          startTime: data.businessHour.saturdayStartingTime,
+          endTime: data.businessHour.saturdayEndingTime,
+        },
+        day: 'Saturday',
+      },
+      {
+        openHours: {
+          startTime: data.businessHour.sundayStartingTime,
+          endTime: data.businessHour.sundayEndingTime,
+        },
+        day: 'Sunday',
+      },
+    ];
+    console.log('sending req');
+    data.businessHour = mappedBusinessHours;
+    return this.http.get<{ restaurant: Restaurant }>(
+      `${this.URL}/restaurant/${this.currentUser?.userId}`,
+      { ...data }
+    );
   }
   updateReservationInfoData(data: any) {
     this.reservationInfo = data;

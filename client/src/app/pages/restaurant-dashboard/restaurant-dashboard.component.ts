@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatTabChangeEvent, MatTabGroup } from '@angular/material/tabs';
+import { forkJoin } from 'rxjs';
 
 import { CanDeactivateType } from 'src/app/common/guards/canDeactivate.guard';
 import { Question } from 'src/app/models/question.model';
@@ -15,6 +16,7 @@ import { RestaurantInfoService } from 'src/app/services/restaurant-info.service'
   styleUrls: ['./restaurant-dashboard.component.scss'],
 })
 export class RestaurantDashboardComponent implements OnInit, OnDestroy {
+  isLoading: boolean = false;
   restaurant!: Restaurant;
 
   generalInformationQuestions!: Question[];
@@ -32,19 +34,22 @@ export class RestaurantDashboardComponent implements OnInit, OnDestroy {
   ) {}
   ngOnInit(): void {
     const generalInfoAppData = this.dashboardService.getGeneralInfoData();
-
     const manageReservationAppData =
       this.dashboardService.getReservationInfoData();
 
-    this.dashboardService.generalInfoSubject.subscribe((appData: any) => {
-      this.createOrUpdateGeneralInfoForm(appData);
-    });
-    this.dashboardService.reservationInfoSubject.subscribe((appData) => {
-      this.createOrUpdateManageReservationForm(appData);
-    });
+    const fetchDashboardInfo = this.dashboardService.getGeneralInfoData();
 
-    this.createOrUpdateGeneralInfoForm(generalInfoAppData);
-    this.createOrUpdateManageReservationForm(manageReservationAppData);
+    forkJoin([fetchDashboardInfo]).subscribe(([dashBoardData]) => {
+      this.createOrUpdateGeneralInfoForm(dashBoardData);
+
+      this.dashboardService.reservationInfoSubject.subscribe((appData) => {
+        this.createOrUpdateManageReservationForm(appData);
+      });
+
+      // this.createOrUpdateGeneralInfoForm(generalInfoAppData);
+      this.createOrUpdateManageReservationForm(manageReservationAppData);
+      this.isLoading = true;
+    });
 
     window.onbeforeunload = () => {
       if (
@@ -89,6 +94,14 @@ export class RestaurantDashboardComponent implements OnInit, OnDestroy {
       );
     }
     return true;
+  }
+
+  submitGeneralInfoForm() {
+    this.dashboardService
+      .updateGeneralInfoData(this.generalInformationForm.value)
+      .subscribe((data) => {
+        this.createOrUpdateGeneralInfoForm(data);
+      });
   }
 
   ngOnDestroy(): void {
