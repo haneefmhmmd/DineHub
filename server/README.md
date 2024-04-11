@@ -303,14 +303,7 @@
         "restaurant": "6615b68bcac0973d19e836bb",
         "customer": "6615f4a6f0a22cbe9e3c9be9",
         "slotInterval": "18:00 - 20:00",
-        "paymentInfo": [ `Optional - You can leave it as an empty array []`
-            {
-                "paymentAmount": 159.99,
-                "paymentType": "Credit Card",
-                "cardNumber": "1234567890123456",
-                "expiryDate": "04/27"
-            }
-        ],
+        "reservedDate": "2024-05-15",
         "tableNumber": 5
     }
 
@@ -344,3 +337,9 @@
             "paymentAmount": 149.99,
             "paymentType": "Cash"
         }
+
+### Get Reservations of a given customer ID
+-   GET **Endpoint:** `/reservation/customer/:id`
+
+### Get Reservations of a given restaurant ID
+-   GET **Endpoint:** `/reservation/restaurant/:id`

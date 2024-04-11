@@ -10,4 +10,7 @@ router.delete("/reservation", controller.delete);
 router.put("/reservation/payment/:id", controller.updatePayment);
 router.get("/reservation/payment/:id", controller.getPaymentByReservationId);
 
+router.get("/reservation/customer/:id", controller.getReservationsByCustomerId);
+router.get("/reservation/restaurant/:id", controller.getReservationsByRestaurantId);
+
 module.exports = router;
