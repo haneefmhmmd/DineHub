@@ -29,7 +29,7 @@ const routes: Routes = [
     ],
   },
   {
-    path: 'reserve',
+    path: 'reserve/:id',
     component: ReservationFormComponent,
   },
   {
@@ -44,7 +44,6 @@ const routes: Routes = [
     path: 'app',
     component: RestaurantDashboardComponent,
     canActivate: [AuthGuard],
-    canDeactivate: [canDeactivateGuard],
   },
   {
     path: '**',

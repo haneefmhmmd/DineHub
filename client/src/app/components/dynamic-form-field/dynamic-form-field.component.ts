@@ -1,5 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+} from '@angular/forms';
 import { Question } from 'src/app/models/question.model';
 
 @Component({
@@ -13,6 +19,8 @@ export class DynamicFormFieldComponent {
 
   @Input()
   form!: FormGroup;
+
+  constructor(private fb: FormBuilder) {}
 
   getErrorMessage(questionControlName: string | null = null) {
     let formControl: AbstractControl = <FormControl>(
@@ -64,5 +72,23 @@ export class DynamicFormFieldComponent {
       );
       formControl.setValue(`${startingHour} : ${endingHour}`);
     }
+  }
+
+  seatingArrangements() {
+    return this.form.controls['seatingArrangements'] as FormArray<FormGroup>;
+  }
+
+  addNewSeatingArrangment() {
+    const newSeatingArrangement = this.fb.group({
+      tableNumber: [0],
+      tableCapacity: [0],
+    });
+    this.seatingArrangements().controls.push(newSeatingArrangement);
+    this.seatingArrangements().updateValueAndValidity();
+    console.log('value: ', this.form.controls);
+  }
+
+  deleteArrangment(i: number) {
+    this.seatingArrangements().removeAt(i);
   }
 }

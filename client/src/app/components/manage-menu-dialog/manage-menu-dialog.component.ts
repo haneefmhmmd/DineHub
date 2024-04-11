@@ -28,6 +28,12 @@ export class ManageMenuDialogComponent implements OnInit {
         ? false
         : true;
 
+    this.isEditModal =
+      this.data.modalType === 'editMenuItem' ||
+      this.data.modalType === 'editCategory'
+        ? true
+        : false;
+
     this.categories = this.dbs.getCategories();
 
     if (this.data) {
@@ -58,16 +64,22 @@ export class ManageMenuDialogComponent implements OnInit {
 
   onSubmit() {
     if (this.form.valid) {
-      if (this.isCategoryModal && !this.isEditModal) {
-        this.dbs.addNewCategory({ ...this.form.value, items: [] });
+      if (this.isCategoryModal && this.isEditModal) {
+        this.dbs
+          .addNewCategory({ ...this.form.value, items: [] })
+          .subscribe((data) => {
+            this.dialogRef.close();
+          });
       } else if (this.isCategoryModal && this.isEditModal) {
         this.dbs.updateCategory(this.form.value);
       } else if (!this.isCategoryModal && this.isEditModal) {
-        this.dbs.addNewMenuItem(this.form.value);
+        this.dbs.addNewMenuItem(this.form.value).subscribe((data) => {
+          this.dialogRef.close();
+        });
       } else {
         this.dbs.updateMenuItem(this.form.value);
       }
-      this.dialogRef.close();
+      // this.dialogRef.close();
     }
   }
 }
