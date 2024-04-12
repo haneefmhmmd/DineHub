@@ -14,8 +14,8 @@ exports.create = async (req, res) => {
 
     const menu = new Menu({
       restaurant,
-      menuName: "",
-      menuItems: [],
+      menuName,
+      menuItems,
     });
 
     const savedMenu = await menu.save();

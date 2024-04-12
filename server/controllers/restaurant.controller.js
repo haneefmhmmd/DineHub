@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const Restaurant = require("../models/restaurant.model");
+const Menu = require("../models/menu.model");
 const { createToken } = require("../middlewares/utils");
 const bcrypt = require("bcrypt");
 
@@ -24,6 +25,14 @@ exports.create = async (req, res) => {
     const restaurant = new Restaurant(req.body);
 
     const savedRestaurant = await restaurant.save();
+
+    const menu = new Menu({
+      restaurant: savedRestaurant._id,
+      menuName: "",
+      menuItems: [],
+    });
+
+    await menu.save();
 
     return res.status(201).send({ savedRestaurant });
   } catch (error) {
