@@ -10,12 +10,17 @@ import { DashboardService } from 'src/app/services/dashboard.service';
 })
 export class ManageMenuDialogComponent implements OnInit {
   isCategoryModal!: boolean;
-  isEditModal: boolean = false;
+  isEditModal!: boolean;
   categories!: string[];
   form!: FormGroup;
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: { modalType: string; modalTitle: string; formData?: any },
+    public data: {
+      modalType: string;
+      modalTitle: string;
+      formData?: any;
+      categoryId?: any;
+    },
     public dialogRef: MatDialogRef<ManageMenuDialogComponent>,
 
     private fb: FormBuilder,
@@ -36,17 +41,10 @@ export class ManageMenuDialogComponent implements OnInit {
 
     this.categories = this.dbs.getCategories();
 
-    if (this.data) {
-      this.isEditModal = true;
-    }
-
+    console.log(this.data.formData);
     if (this.isCategoryModal) {
       this.form = this.fb.group({
-        name: [this.data.formData?.name ?? '', Validators.required],
-        description: [
-          this.data.formData?.description ?? '',
-          Validators.required,
-        ],
+        name: [this.data.formData?.categoryName ?? '', Validators.required],
       });
     } else {
       this.form = this.fb.group({
@@ -55,31 +53,77 @@ export class ManageMenuDialogComponent implements OnInit {
           this.data.formData?.description ?? '',
           Validators.required,
         ],
-        category: [this.data.formData?.category ?? '', Validators.required],
+        category: [
+          this.data.formData?.category ?? '',
+          !this.isEditModal && Validators.required,
+        ],
         price: [this.data.formData?.price ?? '', Validators.required],
-        imageUrl: [this.data.formData?.imageURL ?? '', Validators.required],
+        image: [this.data.formData?.image ?? '', Validators.required],
       });
     }
   }
 
   onSubmit() {
     if (this.form.valid) {
-      if (this.isCategoryModal && this.isEditModal) {
+      if (this.isCategoryModal && !this.isEditModal) {
         this.dbs
           .addNewCategory({ ...this.form.value, items: [] })
           .subscribe((data) => {
             this.dialogRef.close();
           });
       } else if (this.isCategoryModal && this.isEditModal) {
-        this.dbs.updateCategory(this.form.value);
-      } else if (!this.isCategoryModal && this.isEditModal) {
+        this.dbs
+          .updateCategory(this.form.value, this.data.formData._id)
+          .subscribe(
+            (data) => {
+              this.dialogRef.close();
+            },
+            (error) => {}
+          );
+      } else if (!this.isCategoryModal && !this.isEditModal) {
         this.dbs.addNewMenuItem(this.form.value).subscribe((data) => {
           this.dialogRef.close();
         });
       } else {
-        this.dbs.updateMenuItem(this.form.value);
+        this.dbs
+          .updateMenuItem(
+            this.form.value,
+            this.data.formData._id,
+            this.data.categoryId
+          )
+          .subscribe(
+            (data) => {
+              this.dialogRef.close();
+            },
+            (error) => {
+              console.log('Error while updating menu', error);
+            }
+          );
       }
-      // this.dialogRef.close();
+    }
+  }
+
+  onDelete() {
+    if (this.isEditModal && !this.isCategoryModal)
+      this.dbs
+        .deleteMenuItem(this.data.formData._id, this.data.categoryId)
+        .subscribe(
+          (data) => {
+            this.dialogRef.close();
+          },
+          (error) => {
+            console.log('Error while delete menu', error);
+          }
+        );
+    else if (this.isEditModal && this.isCategoryModal) {
+      this.dbs.deleteCategory(this.data.formData._id).subscribe(
+        (data) => {
+          this.dialogRef.close();
+        },
+        (error) => {
+          console.log('Error while deleting category', error);
+        }
+      );
     }
   }
 }

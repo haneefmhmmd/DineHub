@@ -35,7 +35,12 @@ export class ManageMenuComponent implements OnInit {
     });
   }
 
-  openMenuModal(e: MouseEvent, modalType: string, formData?: any) {
+  openMenuModal(
+    e: MouseEvent,
+    modalType: string,
+    formData?: any,
+    categoryId?: any
+  ) {
     e.stopPropagation();
     let modalTitle = '';
     if (modalType === 'editCategory') {
@@ -48,7 +53,7 @@ export class ManageMenuComponent implements OnInit {
       modalTitle = 'Add Menu Item';
     }
     this.dialog.open(ManageMenuDialogComponent, {
-      data: { modalType, modalTitle, formData },
+      data: { modalType, modalTitle, formData, categoryId },
     });
   }
 }

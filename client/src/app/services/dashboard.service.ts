@@ -165,6 +165,34 @@ export class DashboardService {
       categoryItems: [],
     });
 
+    console.log(this.menu);
+
+    return this.http.put(`${this.URL}/menu/${this.menu._id}`, this.menu).pipe(
+      map((data: any) => {
+        this.extractCategoriesAndUpdate(data.updatedMenu.menuItems);
+      })
+    );
+  }
+
+  updateCategory(data: any, categoryId: any) {
+    console.log('updateCategory', data);
+    const category = this.menu.menuItems.filter(
+      (category: any) => category._id === categoryId
+    );
+    category[0].categoryName = data.name;
+    return this.http.put(`${this.URL}/menu/${this.menu._id}`, this.menu).pipe(
+      map((data: any) => {
+        this.extractCategoriesAndUpdate(data.updatedMenu.menuItems);
+      })
+    );
+  }
+
+  deleteCategory(careerId: any) {
+    console.log(careerId);
+    const filteredCareers = this.menu.menuItems.filter(
+      (category: any) => category._id !== careerId
+    );
+    this.menu.menuItems = filteredCareers;
     return this.http.put(`${this.URL}/menu/${this.menu._id}`, this.menu).pipe(
       map((data: any) => {
         this.extractCategoriesAndUpdate(data.updatedMenu.menuItems);
@@ -192,11 +220,40 @@ export class DashboardService {
     );
   }
 
-  updateCategory(data: any) {
+  updateMenuItem(data: any, itemId: any, categoryId: any) {
     console.log('updateCategory', data);
+    const category = this.menu.menuItems.filter(
+      (category: any) => category._id === categoryId
+    );
+    const items = category[0].categoryItems;
+    for (const item of items) {
+      if (itemId === item._id) {
+        item.name = data.name;
+        item.image = data.image;
+        item.description = data.description;
+        item.price = data.price;
+        break;
+      }
+    }
+    return this.http.put(`${this.URL}/menu/${this.menu._id}`, this.menu).pipe(
+      map((data: any) => {
+        this.extractCategoriesAndUpdate(data.updatedMenu.menuItems);
+      })
+    );
   }
 
-  updateMenuItem(data: any) {
-    console.log('updateCategory', data);
+  deleteMenuItem(itemId: any, categoryId: any) {
+    const category = this.menu.menuItems.filter(
+      (category: any) => category._id === categoryId
+    );
+    const updatedItems = category[0].categoryItems.filter(
+      (item: any) => item._id !== itemId
+    );
+    category[0].categoryItems = updatedItems;
+    return this.http.put(`${this.URL}/menu/${this.menu._id}`, this.menu).pipe(
+      map((data: any) => {
+        this.extractCategoriesAndUpdate(data.updatedMenu.menuItems);
+      })
+    );
   }
 }

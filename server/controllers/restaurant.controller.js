@@ -28,7 +28,7 @@ exports.create = async (req, res) => {
 
     const menu = new Menu({
       restaurant: savedRestaurant._id,
-      menuName: "",
+      menuName: "Main",
       menuItems: [],
     });
 
