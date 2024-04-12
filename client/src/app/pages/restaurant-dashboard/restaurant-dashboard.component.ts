@@ -25,7 +25,7 @@ export class RestaurantDashboardComponent implements OnInit, OnDestroy {
   generalInformationForm!: FormGroup;
   manageReservationForm!: FormGroup;
 
-  selectedTabIndex: number = 0;
+  selectedTabIndex: number = 1;
 
   constructor(
     private restaurantQuestionService: RestaurantInfoService,
@@ -34,20 +34,12 @@ export class RestaurantDashboardComponent implements OnInit, OnDestroy {
   ) {}
   ngOnInit(): void {
     const generalInfoAppData = this.dashboardService.getGeneralInfoData();
-    const manageReservationAppData =
-      this.dashboardService.getReservationInfoData();
 
     const fetchDashboardInfo = this.dashboardService.getGeneralInfoData();
 
     forkJoin([fetchDashboardInfo]).subscribe(([dashBoardData]) => {
       this.createOrUpdateGeneralInfoForm(dashBoardData);
 
-      this.dashboardService.reservationInfoSubject.subscribe((appData) => {
-        this.createOrUpdateManageReservationForm(appData);
-      });
-
-      // this.createOrUpdateGeneralInfoForm(generalInfoAppData);
-      this.createOrUpdateManageReservationForm(manageReservationAppData);
       this.isLoading = true;
     });
 
@@ -100,7 +92,6 @@ export class RestaurantDashboardComponent implements OnInit, OnDestroy {
     this.dashboardService
       .updateGeneralInfoData(this.generalInformationForm.value)
       .subscribe((data) => {
-        console.log(data);
         this.createOrUpdateGeneralInfoForm(data);
       });
   }

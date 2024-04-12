@@ -24,4 +24,28 @@
             </mat-error>
         </mat-form-field>
     </div>
+
+    <div *ngSwitchCase="'seatingArrangements'" class="seating-arrangements mt-1" formArrayName="seatingArrangements">
+        <div class="seating-arrangements__header">
+            <h6 class="day">{{question.label}}</h6>
+            <button mat-raised-button color="accent" type="submit" (click)="addNewSeatingArrangment()">Add</button>
+        </div>
+
+        <ng-container *ngFor="let seatingArrangement of seatingArrangements().controls; let i = index" class="mt-1">
+            <div [formGroup]="seatingArrangement" class="seating-arrangements__controls mt-3">
+                <mat-form-field appearance="outline">
+                    <span matTextPrefix class="hour-label">Table Number&nbsp;</span>
+                    <input matInput formControlName="tableNumber" type="number">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <span matTextPrefix class="hour-label">Table Capacity&nbsp;</span>
+                    <input matInput formControlName="tableCapacity" type="number">
+                </mat-form-field>
+                <button mat-mini-fab color="accent" aria-label="Example icon button with a delete icon"
+                    (click)="deleteArrangment(i)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </ng-container>
+    </div>
 </ng-container>

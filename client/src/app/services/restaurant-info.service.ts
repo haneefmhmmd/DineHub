@@ -3,7 +3,6 @@ import { Question } from '../models/question.model';
 
 export class RestaurantInfoService {
   getGeneralInformationQuestions(answer: any): Question[] {
-    console.log('answer: ', answer);
     return [
       {
         key: 'name',
@@ -279,6 +278,12 @@ export class RestaurantInfoService {
             },
           },
         ],
+      },
+      {
+        key: 'seatingArrangements',
+        controlType: 'seatingArrangements',
+        label: 'Seating Arrangements',
+        formArray: answer?.seatingArrangements ?? [],
       },
     ];
   }

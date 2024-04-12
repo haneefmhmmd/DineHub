@@ -7,7 +7,7 @@
     </header>
 
 
-    <form mat-dialog-content class="dialog-content" [formGroup]="form" (submit)="onSubmit()">
+    <form mat-dialog-content class="dialog-content" [formGroup]="form">
 
         <mat-form-field appearance="outline">
             <mat-label>Name</mat-label>
@@ -41,7 +41,7 @@
 
         <div class="action-btns">
             <button mat-stroked-button mat-dialog-close>Cancel</button>
-            <button mat-raised-button color="accent" type="submit">Save</button>
+            <button mat-raised-button color="accent" type="submit" (click)="onSubmit()">Save</button>
         </div>
     </form>
 </article>

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DashboardService, MenuType } from 'src/app/services/dashboard.service';
+import { Menu } from 'src/app/models/menu.model';
+import { AuthService } from 'src/app/services/auth.service';
+import { DashboardService } from 'src/app/services/dashboard.service';
 import { ManageMenuDialogComponent } from '../manage-menu-dialog/manage-menu-dialog.component';
 
 @Component({
@@ -10,18 +12,26 @@ import { ManageMenuDialogComponent } from '../manage-menu-dialog/manage-menu-dia
 })
 export class ManageMenuComponent implements OnInit {
   // TODO: remove and re-use the menu.model
-  menu!: MenuType[];
+  menu!: any;
+  isLoaded: boolean = false;
 
   constructor(
     private dialog: MatDialog,
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
+    private auth: AuthService
   ) {}
 
   ngOnInit(): void {
-    this.menu = this.dashboardService.getMenuDataByCategory();
-
-    this.dashboardService.menuSubject.subscribe((data) => {
-      this.menu = data;
+    this.auth.user.subscribe((user) => {
+      if (user?.userId) {
+        this.dashboardService
+          .getMenuDataByCategory(user.userId)
+          .subscribe((data) => {
+            console.log(data);
+            this.menu = data;
+            this.isLoaded = true;
+          });
+      }
     });
   }
 

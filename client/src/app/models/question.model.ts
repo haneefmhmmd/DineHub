@@ -12,4 +12,5 @@ export class Question {
   questions?: Question[];
   errorMessage?: { [key: string]: string };
   hint?: string;
+  formArray?: { tableNumber: number; tableCapacity: number }[] = [];
 }
