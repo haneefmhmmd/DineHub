@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Restaurant = require("./restaurant.model");
 const Customer = require("./customer.model");
+const { isEmail } = require("validator");
 
 //Payment Info schema
 const paymentSchema = new mongoose.Schema({
@@ -44,7 +45,20 @@ const reservationSchema = new mongoose.Schema({
   customer: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Customer",
-    required: [true, "Please provide the customer"],
+  },
+  customerName: {
+    type: String,
+    required: [true, "Please provide customer name"],
+  },
+  customerEmail: {
+    type: String,
+    required: [true, "Please provide customer email"],
+    lowercase: true,
+    validator: [isEmail, "Please enter a valid email"],
+  },
+  customerPhoneNumber: {
+    type: String,
+    required: [true, "Please provide customer phone number"],
   },
   reservedDate: {
     type: String,

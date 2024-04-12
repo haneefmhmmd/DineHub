@@ -6,8 +6,10 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, ActivatedRouteSnapshot, Route } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Reservation } from 'src/app/models/reservation.model';
+import { ReservationService } from 'src/app/services/reservation.service';
 import { RestaurantsService } from 'src/app/services/restaurants.service';
 
 @Component({
@@ -22,7 +24,10 @@ export class ReservationFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private restaurantService: RestaurantsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router,
+    private reservationService: ReservationService,
+    private snackBar: MatSnackBar
   ) {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
@@ -75,13 +80,27 @@ export class ReservationFormComponent implements OnInit {
   submitReservation() {
     if (this.form.valid) {
       const formData = this.form.value;
-      const reservationData = {
+      const reservationData: Reservation = {
         restaurant: this.restaurant._id,
-        customer: '6615f4a6f0a22cbe9e3c9be9',
-        slotInterval: '18:00 - 20:00',
-        reservedDate: '2024-05-15',
-        tableNumber: 5,
+        customerName: formData.name,
+        customerEmail: formData.email,
+        customerPhoneNumber: formData.phone,
+        slotInterval: formData.arrivalTime,
+        reservedDate: new Date(formData.date).toISOString().slice(0, 10),
+        tableNumber: formData.tableNumber,
       };
+
+      this.reservationService.bookReservation(reservationData).subscribe(
+        (data) => {
+          this.router.navigate(['/confirmation', data._id]);
+        },
+        (errorMessage) => {
+          this.snackBar.open(errorMessage, 'Close', {
+            duration: 2000,
+            verticalPosition: 'top',
+          });
+        }
+      );
     }
   }
 }

@@ -5,7 +5,9 @@ const Reservation = require("../models/reservation.model");
 exports.create = async (req, res) => {
   if (
     !req.body.restaurant ||
-    !req.body.customer ||
+    !req.body.customerName ||
+    !req.body.customerEmail ||
+    !req.body.customerPhoneNumber ||
     !req.body.reservedDate ||
     !req.body.slotInterval ||
     !req.body.tableNumber
@@ -25,7 +27,9 @@ exports.create = async (req, res) => {
     const reservation = new Reservation({
       date: date,
       restaurant: req.body.restaurant,
-      customer: req.body.customer,
+      customerName: req.body.customerName,
+      customerEmail: req.body.customerEmail,
+      customerPhoneNumber: req.body.customerPhoneNumber,
       reservedDate: req.body.reservedDate,
       slotInterval: req.body.slotInterval,
       paymentInfo: req.body.paymentInfo,

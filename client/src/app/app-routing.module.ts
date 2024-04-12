@@ -4,6 +4,7 @@ import { canDeactivateGuard } from './common/guards/canDeactivate.guard';
 import { AuthComponent } from './pages/auth/auth.component';
 import { AuthGuard } from './pages/auth/auth.guard';
 import { BusinessComponent } from './pages/business/business.component';
+import { ConfirmationComponent } from './pages/confirmation/confirmation.component';
 import { LandingComponent } from './pages/home/landing.component';
 import { ReservationFormComponent } from './pages/reservation-form/reservation-form.component';
 import { RestaurantDashboardComponent } from './pages/restaurant-dashboard/restaurant-dashboard.component';
@@ -31,6 +32,10 @@ const routes: Routes = [
   {
     path: 'reserve/:id',
     component: ReservationFormComponent,
+  },
+  {
+    path: 'confirmation/:id',
+    component: ConfirmationComponent,
   },
   {
     path: 'signup',

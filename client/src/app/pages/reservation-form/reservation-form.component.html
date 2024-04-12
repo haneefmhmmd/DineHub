@@ -39,12 +39,12 @@
             <mat-form-field>
                 <mat-label>Arrival Time</mat-label>
                 <mat-select formControlName="arrivalTime">
-                    <mat-option value="9 AM">10 AM - 12:00 PM</mat-option>
-                    <mat-option value="9 AM">12 PM - 2:00 PM</mat-option>
-                    <mat-option value="9 AM">2:00 AM - 4:00 PM</mat-option>
-                    <mat-option value="9 AM">4:00 PM - 6:00 PM</mat-option>
-                    <mat-option value="9 AM">6:00 PM - 8:00 PM</mat-option>
-                    <mat-option value="9 AM">8:00 PM - 10:00 PM</mat-option>
+                    <mat-option value="10 AM - 12:00 PM">10 AM - 12:00 PM</mat-option>
+                    <mat-option value="12 PM - 2:00 PM">12 PM - 2:00 PM</mat-option>
+                    <mat-option value="2:00 AM - 4:00 PM">2:00 AM - 4:00 PM</mat-option>
+                    <mat-option value="4:00 PM - 6:00 PM">4:00 PM - 6:00 PM</mat-option>
+                    <mat-option value="6:00 PM - 8:00 PM">6:00 PM - 8:00 PM</mat-option>
+                    <mat-option value="8:00 PM - 10:00 PM">8:00 PM - 10:00 PM</mat-option>
                 </mat-select>
                 <mat-error *ngIf="form.controls['arrivalTime'].invalid">Please choose an arrival time.</mat-error>
             </mat-form-field>

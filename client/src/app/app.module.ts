@@ -45,6 +45,7 @@ import { QuestionControlService } from './services/question-control.service';
 import { RestaurantInfoService } from './services/restaurant-info.service';
 import { RestaurantsService } from './services/restaurants.service';
 import { A11yModule } from '@angular/cdk/a11y';
+import { ConfirmationComponent } from './pages/confirmation/confirmation.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { A11yModule } from '@angular/cdk/a11y';
     DynamicFormFieldComponent,
     ManageMenuComponent,
     ManageMenuDialogComponent,
+    ConfirmationComponent,
   ],
   imports: [
     BrowserModule,
