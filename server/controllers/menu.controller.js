@@ -3,7 +3,7 @@ require("dotenv").config();
 const Menu = require("../models/menu.model");
 
 exports.create = async (req, res) => {
-  if (!req.body.restaurant || !req.body.menuName || !req.body.menuItems) {
+  if (!req.body.restaurant) {
     return res
       .status(400)
       .json({ error: "Please make sure all the fields are completed!" });
@@ -14,8 +14,8 @@ exports.create = async (req, res) => {
 
     const menu = new Menu({
       restaurant,
-      menuName,
-      menuItems,
+      menuName: "",
+      menuItems: [],
     });
 
     const savedMenu = await menu.save();

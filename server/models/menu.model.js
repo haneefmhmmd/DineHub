@@ -32,11 +32,9 @@ const menuSchema = new mongoose.Schema({
   restaurant: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Restaurant",
-    required: [true, "Please provide the restaurant"],
   },
   menuName: {
     type: String,
-    required: [true, "Please provide menu name"],
   },
   menuItems: [menuItemSchema],
 });
