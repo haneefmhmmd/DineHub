@@ -24,6 +24,7 @@ import {
   signUpFormGroup,
   signUpPageContent,
 } from './auth.util';
+import { switchMap } from 'rxjs/operators';
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
@@ -112,9 +113,10 @@ export class AuthComponent implements OnInit, OnDestroy {
     const { email, password, restaurantName, contactNumber } = this.form.value;
     this.authService
       .signUp(email, password, restaurantName, contactNumber)
+      .pipe(switchMap(() => this.authService.login(email, password)))
       .subscribe(
         (data) => {
-          this.router.navigate(['login']);
+          this.router.navigate(['app']);
         },
         (error) => this.handleAuthError(error)
       );
