@@ -29,6 +29,7 @@
             <a mat-button routerLink="/restaurants">Find Restaurants</a>
             <a mat-button routerLink="/login" *ngIf="!isUserAuthenticated">Login</a>
             <a mat-raised-button color="accent" routerLink="/signup" *ngIf="!isUserAuthenticated">Sign Up</a>
+            <a mat-raised-button color="accent" routerLink="/app" *ngIf="isUserAuthenticated">Dashboard</a>
             <a mat-raised-button color="accent" (click)="onLogout()" *ngIf="isUserAuthenticated">Logout</a>
         </nav>
         <nav class="header-nav-mobile hide-desktop">
