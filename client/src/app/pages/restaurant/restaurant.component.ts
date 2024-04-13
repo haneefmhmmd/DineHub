@@ -41,7 +41,6 @@ export class RestaurantComponent implements OnInit {
       this.restaurant = restaurant;
       this.restaurantMenu = menu;
 
-      console.log(this.restaurantMenu.menuItems);
       this.title.setTitle(`DineHub | ${restaurant.name}`);
     });
 

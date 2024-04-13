@@ -1,4 +1,4 @@
-<section *ngIf="!isLoading">
+<section *ngIf="!isLoading" class="restaurant-container">
     <article class="container banner-section">
         <picture class="banner-image">
             <img [src]="restaurant.bannerImageHref" alt="">
@@ -46,7 +46,7 @@
             <p>{{restaurant.about}}</p>
         </article>
     </article>
-    <article class="container restaurant-menu mt-2">
+    <article class="container restaurant-menu mt-2" *ngIf="restaurantMenu.menuItems.length!==0">
         <h5>Menu</h5>
         <mat-accordion>
             <mat-expansion-panel [ngClass]="{'mt-2': i!==0}" [expanded]="i == 0" *ngFor="let menu of restaurantMenu.menuItems;

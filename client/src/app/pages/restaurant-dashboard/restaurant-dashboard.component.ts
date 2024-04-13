@@ -25,7 +25,7 @@ export class RestaurantDashboardComponent implements OnInit, OnDestroy {
   generalInformationForm!: FormGroup;
   manageReservationForm!: FormGroup;
 
-  selectedTabIndex: number = 1;
+  selectedTabIndex: number = 0;
 
   constructor(
     private restaurantQuestionService: RestaurantInfoService,
