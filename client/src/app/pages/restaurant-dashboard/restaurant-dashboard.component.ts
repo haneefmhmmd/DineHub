@@ -5,6 +5,7 @@ import { forkJoin } from 'rxjs';
 
 import { CanDeactivateType } from 'src/app/common/guards/canDeactivate.guard';
 import { Question } from 'src/app/models/question.model';
+import { Reservation } from 'src/app/models/reservation.model';
 import { Restaurant } from 'src/app/models/restaurant.model';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { QuestionControlService } from 'src/app/services/question-control.service';
@@ -18,7 +19,16 @@ import { RestaurantInfoService } from 'src/app/services/restaurant-info.service'
 export class RestaurantDashboardComponent implements OnInit, OnDestroy {
   isLoading: boolean = false;
   restaurant!: Restaurant;
-
+  reservations: Reservation[] = [];
+  displayedColumns: string[] = [
+    '_id',
+    'customerName',
+    'customerEmail',
+    'customerPhoneNumber',
+    'reservedDate',
+    'slotInterval',
+    'tableNumber',
+  ];
   generalInformationQuestions!: Question[];
   manageReservationQuestions!: Question[];
 
@@ -33,21 +43,28 @@ export class RestaurantDashboardComponent implements OnInit, OnDestroy {
     private dashboardService: DashboardService
   ) {}
   ngOnInit(): void {
-    const generalInfoAppData = this.dashboardService.getGeneralInfoData();
-
     const fetchDashboardInfo = this.dashboardService.getGeneralInfoData();
 
     forkJoin([fetchDashboardInfo]).subscribe(([dashBoardData]) => {
       this.createOrUpdateGeneralInfoForm(dashBoardData);
 
+      if (dashBoardData._id) {
+        this.dashboardService.getReservations(dashBoardData._id).subscribe(
+          (data: any) => {
+            this.reservations = data.reservations;
+            console.log(this.reservations);
+          },
+          (err) => {
+            this.reservations = [];
+          }
+        );
+      }
+
       this.isLoading = true;
     });
 
     window.onbeforeunload = () => {
-      if (
-        (this.selectedTabIndex == 0 && this.generalInformationForm.touched) ||
-        (this.selectedTabIndex == 1 && this.manageReservationForm.touched)
-      ) {
+      if (this.selectedTabIndex == 0 && this.generalInformationForm.touched) {
         return false;
       }
 

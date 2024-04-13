@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject, map, take } from 'rxjs';
+import { Subject, catchError, map, take, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Menu } from '../models/menu.model';
 import { Restaurant } from '../models/restaurant.model';
@@ -68,6 +68,22 @@ export class DashboardService {
         `${this.URL}/restaurant/${this.currentUser?.userId}`
       )
       .pipe(map((data) => data.restaurant));
+  }
+
+  getReservations(restaurantId: string) {
+    return this.http
+      .get(`${this.URL}/reservation/restaurant/${restaurantId}`)
+      .pipe(catchError(this.handleReservationsError));
+  }
+
+  handleReservationsError(errResponse: HttpErrorResponse) {
+    let errorMessage: string = errResponse.error.message
+      ? errResponse.error.message
+      : errResponse.error.error
+      ? errResponse.error.error
+      : 'Error loading reservation!';
+
+    return throwError(() => new Error(errorMessage));
   }
 
   getMenuDataByCategory(restaurantId: string) {
