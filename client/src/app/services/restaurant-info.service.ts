@@ -1,4 +1,9 @@
-import { AbstractControl, ValidationErrors, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { Question } from '../models/question.model';
 
 export class RestaurantInfoService {
@@ -177,7 +182,7 @@ export class RestaurantInfoService {
       {
         key: 'businessHours',
         label: 'Operating Hours',
-        hint: 'Enter timings in 24-hour format (e.g., 09:00). Use "00:00" for holidays.',
+        hint: 'Enter timings in 12-hour format (e.g., 09:00 AM). Use "00:00 AM" for holidays.',
         questions: [
           {
             key: 'monday',
@@ -185,12 +190,13 @@ export class RestaurantInfoService {
             controlType: 'businessHour',
             label: 'Monday',
             startingTime:
-              answer?.businessHours[0]?.openHours.startTime ?? '00:00',
-            endingTime: answer?.businessHours[0]?.openHours.endTime ?? '00:00',
-            validators: [Validators.required],
+              answer?.businessHours[0]?.openHours.startTime ?? '00:00 AM',
+            endingTime:
+              answer?.businessHours[0]?.openHours.endTime ?? '00:00 AM',
+            validators: [Validators.required, businessHourValidation()],
             errorMessage: {
               required: 'Operating Hours cannot be empty.',
-              invalidHour: 'Enter a valid time (1:00 - 24:59)',
+              invalidHour: 'Enter a valid time (1:00 - 12:59 AM | PM).',
             },
           },
           {
@@ -201,10 +207,10 @@ export class RestaurantInfoService {
             startingTime:
               answer?.businessHours[1]?.openHours.startTime ?? '00:00',
             endingTime: answer?.businessHours[1]?.openHours.endTime ?? '00:00',
-            validators: [Validators.required],
+            validators: [Validators.required, businessHourValidation()],
             errorMessage: {
               required: 'Operating Hours cannot be empty.',
-              invalidHour: 'Enter a valid time (1:00 - 24:59)',
+              invalidHour: 'Enter a valid time (1:00 - 12:59 AM | PM).',
             },
           },
           {
@@ -215,10 +221,10 @@ export class RestaurantInfoService {
             startingTime:
               answer?.businessHours[2]?.openHours.startTime ?? '00:00',
             endingTime: answer?.businessHours[2]?.openHours.endTime ?? '00:00',
-            validators: [Validators.required],
+            validators: [Validators.required, businessHourValidation()],
             errorMessage: {
               required: 'Operating Hours cannot be empty.',
-              invalidHour: 'Enter a valid time (1:00 - 24:59)',
+              invalidHour: 'Enter a valid time (1:00 - 12:59 AM | PM).',
             },
           },
           {
@@ -229,10 +235,10 @@ export class RestaurantInfoService {
             startingTime:
               answer?.businessHours[3]?.openHours.startTime ?? '00:00',
             endingTime: answer?.businessHours[3]?.openHours.endTime ?? '00:00',
-            validators: [Validators.required],
+            validators: [Validators.required, businessHourValidation()],
             errorMessage: {
               required: 'Operating Hours cannot be empty.',
-              invalidHour: 'Enter a valid time (1:00 - 24:59)',
+              invalidHour: 'Enter a valid time (1:00 - 12:59 AM | PM).',
             },
           },
           {
@@ -243,10 +249,10 @@ export class RestaurantInfoService {
             startingTime:
               answer?.businessHours[4]?.openHours.startTime ?? '00:00',
             endingTime: answer?.businessHours[4]?.openHours.endTime ?? '00:00',
-            validators: [Validators.required],
+            validators: [Validators.required, businessHourValidation()],
             errorMessage: {
               required: 'Operating Hours cannot be empty.',
-              invalidHour: 'Enter a valid time (1:00 - 24:59)',
+              invalidHour: 'Enter a valid time (1:00 - 12:59 AM | PM).',
             },
           },
           {
@@ -257,10 +263,10 @@ export class RestaurantInfoService {
             startingTime:
               answer?.businessHours[5]?.openHours.startTime ?? '00:00',
             endingTime: answer?.businessHours[5]?.openHours.endTime ?? '00:00',
-            validators: [Validators.required],
+            validators: [Validators.required, businessHourValidation()],
             errorMessage: {
               required: 'Operating Hours cannot be empty.',
-              invalidHour: 'Enter a valid time (1:00 - 24:59)',
+              invalidHour: 'Enter a valid time (1:00 - 12:59 AM | PM).',
             },
           },
           {
@@ -271,10 +277,10 @@ export class RestaurantInfoService {
             startingTime:
               answer?.businessHours[6]?.openHours.startTime ?? '00:00',
             endingTime: answer?.businessHours[6]?.openHours.endTime ?? '00:00',
-            validators: [Validators.required],
+            validators: [Validators.required, businessHourValidation()],
             errorMessage: {
               required: 'Operating Hours cannot be empty.',
-              invalidHour: 'Enter a valid time (1:00 - 24:59)',
+              invalidHour: 'Enter a valid time (1:00 - 12:59 AM | PM).',
             },
           },
         ],
@@ -332,14 +338,15 @@ export class RestaurantInfoService {
   }
 }
 
-export function businessHourValidation() {
+export function businessHourValidation(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
-    if (
-      control.value.replace(':', '.') >= 1 &&
-      control.value.replace(':', '.') <= 24
-    ) {
+    const timeRegex = /^(0?[0-9]|1[0-2]):([0-5][0-9]) [APap][mM]$/;
+    const isValidFormat = timeRegex.test(control.value);
+
+    if (isValidFormat) {
       return null;
     }
+
     return { invalidHour: { value: control.value } };
   };
 }

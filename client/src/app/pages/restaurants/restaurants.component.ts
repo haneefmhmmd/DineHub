@@ -11,22 +11,45 @@ import { Restaurant } from '../../models/restaurant.model';
   styleUrls: ['./restaurants.component.scss'],
 })
 export class RestaurantsComponent implements OnInit {
-  @ViewChild('searchTextField') searchTermField!: ElementRef;
+  searchTerm!: string;
   restaurants!: Restaurant[];
+  filteredRestaurants: Restaurant[] = [];
 
   constructor(private restaurantService: RestaurantsService) {}
 
   ngOnInit(): void {
     this.restaurantService.fetchRestaurants().subscribe((restaurants) => {
-      this.restaurants = restaurants;
+      this.restaurants = this.restaurantsAvailableForReservation(restaurants);
+      this.filteredRestaurants = this.restaurants;
     });
   }
 
   onClickSearchBtn() {
-    this.restaurantService
-      .fetchRestaurants(this.searchTermField.nativeElement.value)
-      .subscribe((restaurants) => {
-        this.restaurants = restaurants;
-      });
+    if (this.searchTerm === '') {
+      this.filteredRestaurants = this.restaurants;
+      return;
+    }
+
+    const filteredRestaurantsBySearch = this.filteredRestaurants.filter(
+      (restaurant) =>
+        restaurant.name.toLowerCase().startsWith(this.searchTerm.toLowerCase())
+    );
+    this.filteredRestaurants = filteredRestaurantsBySearch;
+  }
+
+  restaurantsAvailableForReservation(restaurants: Restaurant[]) {
+    return restaurants.filter((restaurant) => {
+      if (
+        restaurant.about === '' ||
+        restaurant.businessHours.length == 0 ||
+        restaurant.seatingArrangements.length == 0 ||
+        restaurant.logoHref === '' ||
+        restaurant.bannerImageHref === '' ||
+        restaurant.contactNumber === ''
+      ) {
+        return false;
+      }
+      return true;
+    });
   }
 }

@@ -1,4 +1,7 @@
 @import "/src/styles/abstract/mixins";
+.restaurant-container {
+  padding-bottom: 40px;
+}
 .banner-section {
   position: relative;
 }
@@ -108,8 +111,4 @@
       width: 100%;
     }
   }
-}
-
-.restaurant-menu {
-  padding-bottom: 40px;
 }
