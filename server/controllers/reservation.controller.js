@@ -89,7 +89,6 @@ exports.delete = async (req, res) => {
 exports.update = async (req, res) => {
   if (
     !req.body.restaurant ||
-    !req.body.customer ||
     !req.body.reservedDate ||
     !req.body.slotInterval ||
     !req.body.tableNumber
